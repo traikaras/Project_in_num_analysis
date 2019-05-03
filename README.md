@@ -1,2 +1,2 @@
-#Project in num analysis
+# Project Numerical Analysis
 TU Berlin
