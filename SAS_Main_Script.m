@@ -42,3 +42,6 @@ phi4_bar = @(x) x.^3-x.^2;
 Mass_Matrix = MassMatrix(n,mu);
 Stiffness_Matrix = stiffness_matrix(E,I,n);
 
+% Getting the extended system
+C = getExtendedSystem(B,Mass_Matrix);
+
