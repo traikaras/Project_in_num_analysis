@@ -5,7 +5,7 @@ T = 0:10; % Time ?
 
 % Discritization
 tau = 1./T; 
-h = 1/(n);
+h = 1/(n-1);
 x = 0:h:L; % x position of nodes
 
 % Boundary Conditions
@@ -28,7 +28,7 @@ phi1_bar = @(x) 1-3.*x.^2+2.*x.^3;
 phi2_bar = @(x) x.*(x-1).^2;
 phi3_bar = @(x) 3*x.^2-2*x.^3;
 phi4_bar = @(x) x.^3-x.^2;
-
+% 
 % % Test plot of the functions
 % firstelement = 0:0.01:h;
 % secondelement = h:0.01:h*2;
@@ -42,3 +42,8 @@ phi4_bar = @(x) x.^3-x.^2;
 Mass_Matrix = MassMatrix(n,mu);
 Stiffness_Matrix = stiffness_matrix(E,I,n);
 
+
+C = getExtendedSystem(B,n);
+% Cheat way of getting v_n (Implament the function later)
+v_n = zeros(2*n,1);
+v_n(end-1) = 1;
