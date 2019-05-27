@@ -42,8 +42,19 @@ phi4_bar = @(x) x.^3-x.^2;
 Mass_Matrix = MassMatrix(n,mu);
 Stiffness_Matrix = stiffness_matrix(E,I,n);
 
-
+% 
 C = getExtendedSystem(B,n);
 % Cheat way of getting v_n (Implament the function later)
 v_n = zeros(2*n,1);
 v_n(end-1) = 1;
+
+% Full extended system
+pad_mat = zeros(size(C));
+two_by_two = zeros(2,2);
+M_l = [Mass_Matrix pad_mat;pad_mat' two_by_two];
+S_l = [Stiffness_Matrix C;C' two_by_two];
+rhs_gamma = [q+v_n;0;0]; 
+
+% Newark Method
+
+
