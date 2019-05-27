@@ -1,5 +1,5 @@
 % Setup
-n = 2^3; % Number of nodes
+n = 2^5; % Number of nodes
 L = 1; % Length of the beam
 T = 0:10; % Time ?
 
@@ -13,8 +13,8 @@ E = 1; % Young's modulus
 I = 1; % Area moment of Inertia
 
 mu = 1; % Beam density function
-Q_L = 1; % Shear force at pos L
-M_L = 1; % Moment at pos L
+Q_L = -1; % Shear force at pos L
+M_L = 0; % Moment at pos L
 
 q = 0; % Load function 
 
@@ -44,9 +44,10 @@ Stiffness_Matrix = stiffness_matrix(E,I,n);
 
 % 
 C = getExtendedSystem(B,n);
+
 % Cheat way of getting v_n (Implament the function later)
 v_n = zeros(2*n,1);
-v_n(end-1) = 1;
+v_n(end-1) = Q_L;
 
 % Full extended system
 pad_mat = zeros(size(C));
@@ -55,6 +56,11 @@ M_l = [Mass_Matrix pad_mat;pad_mat' two_by_two];
 S_l = [Stiffness_Matrix C;C' two_by_two];
 rhs_gamma = [q+v_n;0;0]; 
 
-% Newark Method
+% Back slash solution of the stationary solution
+w_all = S_l\rhs_gamma;
+w = w_all(1:2:end-2);
+w_prime = w_all(2:2:end-2);
+plot(x,w)
+% Newmark Method
 
 

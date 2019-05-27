@@ -2,7 +2,6 @@ function [ C ] = getExtendedSystem( B,n)
 %UNTITLED2 Summary of this function goes here
 %   Detailed explanation goes here
 
-% B = [1,1,0;1,2,0;n,3,0;n,4,1];
 f1 = find(B(:,2)==1);
 f2 = find(B(:,2)==2);
 
