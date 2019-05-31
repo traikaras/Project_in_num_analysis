@@ -1,5 +1,5 @@
 % Setup
-n = 2^5; % Number of nodes
+n = 2^10; % Number of nodes
 L = 1; % Length of the beam
 T = 0:10; % Time ?
 
@@ -29,14 +29,14 @@ phi2_bar = @(x) x.*(x-1).^2;
 phi3_bar = @(x) 3*x.^2-2*x.^3;
 phi4_bar = @(x) x.^3-x.^2;
 % 
-% % Test plot of the functions
-% firstelement = 0:0.01:h;
-% secondelement = h:0.01:h*2;
-% plot(firstelement,phi1_bar((firstelement)./h))
-% hold on 
-% plot(firstelement,phi2_bar((firstelement)./h))
-% plot(firstelement,phi3_bar((firstelement)./h))
-% plot(firstelement,phi4((firstelement)./h))
+% Test plot of the functions
+%firstelement = 0:0.01:h;
+%secondelement = h:0.01:h*2;
+%plot(firstelement,phi1_bar((firstelement)./h))
+%hold on 
+%plot(firstelement,phi2_bar((firstelement)./h))
+%plot(firstelement,phi3_bar((firstelement)./h))
+%plot(firstelement,phi4((firstelement)./h))
 
 % Getting mass and stiffness matrix using it's respective functions
 Mass_Matrix = MassMatrix(n,mu);
@@ -58,9 +58,15 @@ rhs_gamma = [q+v_n;0;0];
 
 % Back slash solution of the stationary solution
 w_all = S_l\rhs_gamma;
-w = w_all(1:2:end-2);
+
+w = w_all(1:2:end-2); 
 w_prime = w_all(2:2:end-2);
-plot(x,w)
+
+% figure 
+% plot(x,w)
+% hold on 
+% axis([0 1 -0.8 0.1])
+
 % Newmark Method
 
 
