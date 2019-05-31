@@ -9,6 +9,6 @@ for i = 1:l
     plot(M(:,i))
     xlim([-5,length(M(:,1))])
     ylim([-3.5,3.5])
-    pause(0.5)
+    pause(0.25)
 end
 

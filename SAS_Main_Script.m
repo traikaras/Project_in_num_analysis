@@ -94,9 +94,9 @@ for i=2:length(T)
     y_Newmark = y_star + beta*y_dprime_Newmark*tau^2;
     y_prime_Newmark = y_prime_star + gamma*y_dprime_Newmark*tau;  
     
-    figure 
-    plot(x,y_Newmark(1:2:end-2))
-    hold on 
-    axis([0 1 -0.8 0.1])
+%     figure 
+%     plot(x,y_Newmark(1:2:end-2))
+%     hold on 
+%     axis([0 1 -0.8 0.1])
 end
 
