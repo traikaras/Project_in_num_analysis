@@ -1,4 +1,4 @@
-function [ sol ] = time_ev( M, S, f, w0, wp0 ,wpp0, T, nt )
+function [ W, dt ] = time_ev( M, S, f, w0, wp0 ,wpp0, T, nt )
 %TIME_EV takes the system of differential equations described with mass
 %matrix M, stifness matrix S and right hand side f, and evolves it from
 %time zero up to time T, with nt timesteps. 
@@ -21,8 +21,8 @@ dt = T/nt; % size of timestep (constant)
 
 % Initialize the output with fixed dimension
 n = length(w0);
-sol = zeros(n,nt+1);
-sol(:,1) = w0; % The first state is the initial state
+W = zeros(n,nt+1);
+W(:,1) = w0; % The first state is the initial state
 
 % The derivatives in previous step initialized as the initial values given.
 wp = wp0; 
@@ -32,14 +32,14 @@ A = M + beta*dt^2*S; % Matrix for solving the linear system en each step
 for i=2:nt+1
     %% Step a) Calculation of intermediate values
     % Equation 7
-    w_s = sol(:,i-1) + wp*dt +(0.5-beta)*wpp*dt^2;
+    w_s = W(:,i-1) + wp*dt +(0.5-beta)*wpp*dt^2;
     % Equation 8
     wp_s = wp + (1-gamma)*wpp*dt;
     %% Step b) Solving the linear system for second derivative
     p = f-S*w_s;
     wpp = A\p;
     %% Step c) Getting w and w prime with Equation 9
-    sol(:,i) = w_s + beta*dt^2*wpp;
+    W(:,i) = w_s + beta*dt^2*wpp;
     wp = wp_s + gamma*dt*wpp;
 end
 
