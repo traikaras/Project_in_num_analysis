@@ -5,14 +5,15 @@ L = 1; % Length of the beam
 % T = 0:tau:10; % Timeline
 T = 10; % Final time evolution
 nt = 50; % Number of time steps
-E = 4; % Young's modulus
+E = 1; % Young's modulus
 I = 1; % Area moment of Inertia
 mu = 1; % Beam density function
 %% Discretization
-h = 1/(n-1); % Size of spatial step
-x = 0:h:L; % x position of nodes
+% Are these needed?
+%h = 1/(n-1); % Size of spatial step
+%x = 0:h:L; % x position of nodes
 
-%% Boundary Conditions
+%% Boundary & Initial Conditions
 Q_L = -1; % Shear force at pos L
 M_L = 0; % Moment at pos L
 q = 0; % Load function 
@@ -26,7 +27,8 @@ wpp0 = zeros(2*n+2,1); % initial acceleration of all nodes at time 0
 
 B = [1,1,w_0;1,2,w_0_prime;n,3,Q_L;n,4,M_L]; % Boundary condition matrix
 
- %% Form functions
+%% Form functions
+% For the future integration I suppose...
 % phi1_bar = @(x) 1-3.*x.^2+2.*x.^3;
 % phi2_bar = @(x) x.*(x-1).^2;
 % phi3_bar = @(x) 3*x.^2-2*x.^3;
@@ -46,7 +48,7 @@ Mass_Matrix = MassMatrix(n,mu);
 Stiffness_Matrix = stiffness_matrix(E,I,n);
 
 % 
-C = getExtendedSystem(B,n);
+C = getRestrictionMatrix(B,n);
 
 % Cheat way of getting v_n (Implement the function later)
 v_n = zeros(2*n,1);

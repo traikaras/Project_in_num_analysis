@@ -1,8 +1,14 @@
 function [Mass] = MassMatrix(n,mu)
-%Assebly of mass matrix for the wave equation
+%MASSMATRIX Assebles the mass matrix for the wave equation. It does not
+%calculate interals, just fill the matrix with the values previously
+%calculated. 
+% The matrix is built up computing the diagonal and the off-diagonal
+% values separately and sum the together
 %   n is the number of nodes
 %   mu is the density of the beam (assumed to be constant
-h = 1/(n-1);
+
+h = 1/(n-1); % Size of spatial step
+
 Mass_diagonal = mu*h/420*sparse(diag([156,4*h^2, repmat(2*[156,4*h^2], [1, n-2]...
     ), 156,4*h^2]));
 
