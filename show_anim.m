@@ -9,9 +9,9 @@ figure;
 
 for i = 1:l
     plot(M(:,i),'linewidth',5)
-    title(['t= ' num2str(i*dt)])
+    title(['t = ' num2str(i*dt)])
     xlim([1,length(M(:,1))+2])
-    ylim([-3.5,3.5])
+    ylim([-1.5,1.5])
     pause(dt)
 end
 

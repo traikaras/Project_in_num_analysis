@@ -1,29 +1,23 @@
 %% Setup
 n = 2^5; % Number of nodes
 L = 1; % Length of the beam
-% tau = 0.2; %time interval
-% T = 0:tau:10; % Timeline
-T = 10; % Final time evolution
-nt = 50; % Number of time steps
+T = 25; % Final time evolution
+nt = 250; % Number of time steps
 E = 1; % Young's modulus
 I = 1; % Area moment of Inertia
 mu = 1; % Beam density function
-%% Discretization
-% Are these needed?
-%h = 1/(n-1); % Size of spatial step
-%x = 0:h:L; % x position of nodes
 
 %% Boundary & Initial Conditions
-Q_L = -1; % Shear force at pos L
+Q_L = 0; % Shear force at pos L
 M_L = 0; % Moment at pos L
 q = 0; % Load function 
 
-w_0 = 0; % Height of the neutral axis at the first position 
-w_0_prime = 0;% Derivative of w at the first position
+w_0 = 0; % Height of the neutral axis at the first position for all time
+w_0_prime = 0; % Derivative of w at the first position for all time
 
-w0 = zeros(2*n+2,1); % initial position of all nodes at time 0
-wp0 = zeros(2*n+2,1); % initial velocity of all nodes at time 0
-wpp0 = zeros(2*n+2,1); % initial acceleration of all nodes at time 0
+w0 = zeros(2*n+2,1); % Initial position of all nodes at time 0
+wp0 = zeros(2*n+2,1); % Initial velocity of all nodes at time 0
+wpp0 = zeros(2*n+2,1); % Initial acceleration of all nodes at time 0
 
 B = [1,1,w_0;1,2,w_0_prime;n,3,Q_L;n,4,M_L]; % Boundary condition matrix
 
@@ -53,62 +47,23 @@ C = getRestrictionMatrix(B,n);
 % Cheat way of getting v_n (Implement the function later)
 v_n = zeros(2*n,1);
 v_n(end-1) = Q_L;
+v_n(end) = M_L;
 
 %% Full extended system
 pad_mat = zeros(size(C));
 two_by_two = zeros(2,2);
 M_l = [Mass_Matrix pad_mat;pad_mat' two_by_two];
 S_l = [Stiffness_Matrix C;C' two_by_two];
-f = [q+v_n;0;0]; % Extended right hand side
+f = [q+v_n;0;0]; %Extended right hand side
 
 %% Time evolution
 [W,dt] = time_ev( M_l, S_l, f, w0, wp0 ,wpp0, T, nt );
 
 %% Getting the position values
 w = W(1:2:end-2,:);
-
+% And the derivative
+wp = W(2:2:end-2,:);
 %% Visualization
 show_anim(w,dt)
-
-%% 
-% Back slash solution of the stationary solution
-% w_all = S_l\rhs_gamma;
-% 
-% w_clean = w_all(1:2:end-2); 
-% w_prime = w_all(2:2:end-2);
-
-% figure 
-% plot(x,w)
-% hold on 
-% axis([0 1 -0.8 0.1])
-
-% Newmark Method
-
-% gamma = 1/2;
-% beta = 1/4;
-% 
-% y_Newmark = zeros(2*n+2,1);
-% y_prime_Newmark = zeros(2*n+2,1);
-% y_dprime_Newmark = zeros(2*n+2,1);
-% 
-% y_star = zeros(2*n+2,1);
-% y_prime_star = zeros(2*n+2,1);
-% 
-% y_dprime_Newmark = zeros(2*n+2,1);
-% 
-% for i=2:length(T)
-%     % Stars
-%     y_star = y_Newmark + y_prime_Newmark*tau+(0.5-beta)*y_dprime_Newmark*tau^2;
-%     y_prime_star = y_prime_Newmark+(1-gamma)*y_dprime_Newmark;
-%     % double prime j+1
-%     y_dprime_Newmark = (M_l+beta*tau^2*S_l)\(-S_l*y_star);
-%     % y and y_prime j+1
-%     y_Newmark = y_star + beta*y_dprime_Newmark*tau^2;
-%     y_prime_Newmark = y_prime_star + gamma*y_dprime_Newmark*tau;  
-%     
-% %     figure 
-% %     plot(x,y_Newmark(1:2:end-2))
-% %     hold on 
-% %     axis([0 1 -0.8 0.1])
-% end
+%show_anim(wp,dt)
 

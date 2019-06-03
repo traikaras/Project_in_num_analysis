@@ -41,5 +41,16 @@ for i=2:nt+1
     %% Step c) Getting w and w prime with Equation 9
     W(:,i) = w_s + beta*dt^2*wpp;
     wp = wp_s + gamma*dt*wpp;
+    
+    %-------------------------------TEST--------------------------------
+    % Time dependent Q_L 
+    % if Q_L starts at zero this slowly increases a downward force 
+    if i*dt<5
+        f(end-3)=f(end-3)-i*0.05;
+    end
+    % At time point 5 it sets Q_L as 0
+    if i*dt==5
+        f(end-3)=0;
+    end
 end
 
