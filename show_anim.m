@@ -5,9 +5,14 @@ function [] = show_anim( M ,dt)
 %   dt is the length of the time step
 
 l = length(M(1,:));
-figure;
+fig = figure;
 
 for i = 1:l
+    
+    if ~ishandle(fig)
+        break
+    end
+    
     plot(M(:,i),'linewidth',5)
     title(['t = ' num2str(i*dt)])
     xlim([1,length(M(:,1))+2])

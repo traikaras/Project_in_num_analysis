@@ -30,6 +30,7 @@ wpp = wpp0;
 A = M + beta*dt^2*S; % Matrix for solving the linear system en each step
 
 for i=2:nt+1
+    % MOVE INTO A Function
     %% Step a) Calculation of intermediate values
     % Equation 7
     w_s = W(:,i-1) + wp*dt +(0.5-beta)*wpp*dt^2;
@@ -45,12 +46,12 @@ for i=2:nt+1
     %-------------------------------TEST--------------------------------
     % Time dependent Q_L 
     % if Q_L starts at zero this slowly increases a downward force 
-    if i*dt<5
-        f(end-3)=f(end-3)-i*0.05;
-    end
-    % At time point 5 it sets Q_L as 0
-    if i*dt==5
-        f(end-3)=0;
-    end
+%     if i*dt<5
+%         f(end-3)=f(end-3)-i*0.05;
+%     end
+% %     % At time point 5 it sets Q_L as 0
+%     if i*dt==5
+%         f(end-3)=0;
+%     end
 end
 
