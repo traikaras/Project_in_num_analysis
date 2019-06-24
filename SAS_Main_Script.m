@@ -57,7 +57,7 @@ S_l = [Stiffness_Matrix C;C' two_by_two];
 f = [q+v_n;0;0]; %Extended right hand side
 
 %% Starting from a bent beam
-w0 = S_l\f;
+%w0 = S_l\f;
 
 %% Time evolution
 [W,dt] = time_ev( M_l, S_l, f, w0, wp0 ,wpp0, T, nt );
