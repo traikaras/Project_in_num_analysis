@@ -50,8 +50,10 @@ for i=2:nt+1
 %         f(end-3)=f(end-3)-i*0.05;
 %     end
 % %     % At time point 5 it sets Q_L as 0
-%     if i*dt==5
-%         f(end-3)=0;
-%     end
+%     
+    if i==2
+        f(1)=0;
+        f(2)=0;
+    end
 end
 

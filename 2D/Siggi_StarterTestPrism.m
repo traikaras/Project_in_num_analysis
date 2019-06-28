@@ -1,7 +1,7 @@
 %% Lame values
 rho = 1;
-lambda = 100;
-mu = 100;
+lambda = 1;
+mu = 1;
 f = [0;0];
 h = 2;
 p_1 = [0;-1];
@@ -46,27 +46,27 @@ S_extend(9:10,5:6)=Itwo;
 % Right hand side
 rhs = vertcat(T_23*tau_23N+V*f,u_1D,u_3D);
 
-w0 = zeros(10,1);
+%% Calculating the time evolution
+u0 = zeros(10,1);
+u0(1:6,1) = [p_1;p_2;p_3];
 wp0 = zeros(10,1);
 wpp0 = zeros(10,1);
-[U,u_prime] = time_ev( M_extend, S_extend, rhs, w0, wp0 ,wpp0, 20, 50 );
+[U,u_prime] = time_ev( M_extend, S_extend, rhs, u0, wp0 ,wpp0, 20, 50 );
+
+%% Plotting up the solution
 u1 = U(1:2,:);
 u2 = U(3:4,:);
 u3 = U(5:6,:);
 X = [u1(1,:);u2(1,:);u3(1,:)];
 Y = [u1(2,:);u2(2,:);u3(2,:)];
 fig = figure;
-for i=1:50
+for i=1:5
     if ~ishandle(fig)
         break
     end
-    plot(X(:,i),Y(:,i))
+    patch(X(:,i),Y(:,i),'r')
     
-    pause(1)
-    if i==5
-        f=[0;0];
-    end
-    
+    pause(2)
 end
 
 
