@@ -1,16 +1,16 @@
 %% Lame values
-rho = 1;
+rho = 10;
 lambda = 1;
 mu = 1;
 f = [0;0];
-h = 2;
-p_1 = [0;-1];
+h = 1;
+p_1 = [0;3];
 p_2 = [1;0];
-p_3 = [0;1];
+p_3 = [-1;0];
 
 %% Boundary conditions
-u_1D = p_1;
-u_3D = p_3;
+u_1D = 0.5*(p_1+p_2);
+u_3D = 0.5*(p_1+p_3);
 tau_23N =[0;0];
 %% Setup
 Itwo = eye(2);
@@ -39,10 +39,10 @@ S = E'*lambda_mu*E;
 M_extend = zeros(10);
 M_extend(1:6,1:6)=M;
 % Stiffness matrix
+C = 0.5*[Itwo Itwo;Itwo ztwo;ztwo Itwo];
 S_extend = zeros(10);
-S_extend(1:6,1:10)=[S -T_12 -T_31];
-S_extend(7:8,1:2)=Itwo;
-S_extend(9:10,5:6)=Itwo;
+S_extend(1:6,:)=[S C];
+S_extend(7:10,1:6)=C';
 % Right hand side
 rhs = vertcat(T_23*tau_23N+V*f,u_1D,u_3D);
 
@@ -51,7 +51,7 @@ u0 = zeros(10,1);
 u0(1:6,1) = [p_1;p_2;p_3];
 wp0 = zeros(10,1);
 wpp0 = zeros(10,1);
-[U,u_prime] = time_ev( M_extend, S_extend, rhs, u0, wp0 ,wpp0, 20, 50 );
+[U,u_prime] = time_ev( M_extend, S_extend, rhs, u0, wp0 ,wpp0, 20, 200 );
 
 %% Plotting up the solution
 u1 = U(1:2,:);
@@ -60,13 +60,15 @@ u3 = U(5:6,:);
 X = [u1(1,:);u2(1,:);u3(1,:)];
 Y = [u1(2,:);u2(2,:);u3(2,:)];
 fig = figure;
-for i=1:5
+axis([-2 2 -2 5])
+for i=1:100
     if ~ishandle(fig)
         break
     end
     patch(X(:,i),Y(:,i),'r')
-    
-    pause(2)
+
+    pause(0.5)
+    %clf;
 end
 
 

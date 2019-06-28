@@ -51,9 +51,9 @@ for i=2:nt+1
 %     end
 % %     % At time point 5 it sets Q_L as 0
 %     
-    if i==2
-        f(1)=0;
-        f(2)=0;
-    end
+%     if i==2
+%         f(1)=0;
+%         f(2)=0;
+%     end
 end
 
