@@ -1,4 +1,4 @@
-function [W,Wp,Wpp] = time_ev1_step( M, S, f, w, wp ,wpp)
+function [W,Wp,Wpp] = time_ev1_step( M, S, f, w, wp ,wpp,dt)
 %TIME_EV takes the system of differential equations described with mass
 %matrix M, stifness matrix S and right hand side f, and evolves it one
 %timestep
