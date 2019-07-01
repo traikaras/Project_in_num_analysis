@@ -1,8 +1,8 @@
 %% Lame values
-rho = 1;
+rho = 10;
 lambda = 1;
 mu = 1;
-f = [0.1;0.1];
+f = [0;0.1];
 h = 1;
 p1 = [0;1];
 p2 = [1;0];
@@ -13,7 +13,7 @@ p3 = [-1;0];
 % u_3D = 0.5*(p1+p3);
 u_1D = [0;0];
 u_3D = [0;0];
-tau_23N =[0;0];
+tau_23N =[0;-0.01];
 
 %% Setup
 Itwo = eye(2);
@@ -60,7 +60,7 @@ Up = zeros(10,1);
 Upp = zeros(10,1);
 %% Starting from a Stationary solution
 %U = S_extend\rhs;
-
+% NOT WORKING 
 %% Solving everything
 
 for i=1:nt
@@ -77,6 +77,7 @@ for i=1:nt
     T_12 = l_12*h/2*[Itwo;Itwo;ztwo];
     T_23 = l_23*h/2*[ztwo;Itwo;Itwo];
     T_31 = l_31*h/2*[Itwo;ztwo;Itwo];
+    
     p(:,i+1) = vertcat(p1,p2,p3);
     P = vertcat([p1 p2 p3],ones(1,3));
     volB = h*abs(det(P))/2;
@@ -90,8 +91,11 @@ for i=1:nt
     S_extend(1:6,:)=[S C];
     S_extend(7:10,1:6)=C';
     rhs = vertcat(T_23*tau_23N+V*f,u_1D,u_3D);
-    if i==2
+    
+    % Stop applying the forces after some time 
+    if i==25
         f =[0;0];
+        tau_23N=[0;0];
     end
 end
 
