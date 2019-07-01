@@ -2,7 +2,7 @@
 rho = 1;
 lambda = 1;
 mu = 1;
-f = [0;0.01];
+f = [0.1;0.1];
 h = 1;
 p1 = [0;1];
 p2 = [1;0];
@@ -90,6 +90,9 @@ for i=1:nt
     S_extend(1:6,:)=[S C];
     S_extend(7:10,1:6)=C';
     rhs = vertcat(T_23*tau_23N+V*f,u_1D,u_3D);
+    if i==2
+        f =[0;0];
+    end
 end
 
 
@@ -102,14 +105,14 @@ end
 Px = p(1:2:5,:);
 Py = p(2:2:6,:);
 fig = figure;
-%axis([-2 2 -2 5])
-for i=1:50
+axis([-1.25 1.25 -0.25 1.25])
+for i=1:200
     if ~ishandle(fig)
         break
     end
     patch(Px(:,i),Py(:,i),'r')
-
-    pause(0.5)
+    title(['i=' num2str(i)])
+    pause(0.2)
     %clf;
 end
 
