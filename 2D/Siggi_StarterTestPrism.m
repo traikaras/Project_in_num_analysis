@@ -1,24 +1,27 @@
 %% Lame values
-rho = 10;
+rho = 1;
 lambda = 1;
 mu = 1;
-f = [0;0];
+f = [0;0.01];
 h = 1;
-p1 = [0;3];
+p1 = [0;1];
 p2 = [1;0];
 p3 = [-1;0];
 
 %% Boundary conditions
-u_1D = 0.5*(p1+p2);
-u_3D = 0.5*(p1+p3);
-tau_23N =[0;-1];
+% u_1D = 0.5*(p1+p2);
+% u_3D = 0.5*(p1+p3);
+u_1D = [0;0];
+u_3D = [0;0];
+tau_23N =[0;0];
+
 %% Setup
 Itwo = eye(2);
 ztwo = zeros(2);
 P = vertcat([p1 p2 p3],ones(1,3));
 Q = P^-1;
-stupidE = [1 0 0 0;0 0.5 0.5 0;0 0.5 0.5 0;0 0 0 0.5];
-E = stupidE*kron(Q(1:2,:),Itwo);
+partE = [1 0 0 0;0 0.5 0.5 0;0 0.5 0.5 0;0 0 0 0.5];
+E = partE*kron(Q(1:2,:),Itwo);
 volB = h*abs(det(P))/2;
 % T's
 l_12 = norm(p1-p2);
@@ -50,16 +53,24 @@ rhs = vertcat(T_23*tau_23N+V*f,u_1D,u_3D);
 T = 20;
 nt = 200;
 dt = T/nt;
-p = zeros(6,nt+1);
+p = zeros(6,nt+1); % Set of all points
 p(:,1) = vertcat(p1,p2,p3);
 U = zeros(10,nt+1);
 Up = zeros(10,1);
 Upp = zeros(10,1);
+%% Starting from a Stationary solution
+%U = S_extend\rhs;
+
+%% Solving everything
+
 for i=1:nt
+    % Solve using the Newark method
     [U(:,i+1),Up,Upp] = Newark1step( M_extend, S_extend, rhs, U(:,i), Up ,Upp,dt);
+    % Define the new position of the points
     p1 = U(1:2,i+1)+p1;
     p2 = U(3:4,i+1)+p2;
     p3 = U(5:6,i+1)+p3;
+    % Now update the variables dependend on them
     l_12 = norm(p1-p2);
     l_23 = norm(p2-p3);
     l_31 = norm(p1-p3);
@@ -70,8 +81,9 @@ for i=1:nt
     P = vertcat([p1 p2 p3],ones(1,3));
     volB = h*abs(det(P))/2;
     Q = P^-1;
-    E = stupidE*kron(Q(1:2,:),Itwo);
+    E = partE*kron(Q(1:2,:),Itwo);
     V = volB/3*[Itwo;Itwo;Itwo];
+    % Update mass and stiffness matrices
     M = ones(6)+eye(6)*rho*volB/12;
     M_extend(1:6,1:6)=M;
     S = E'*lambda_mu*E;
@@ -91,7 +103,7 @@ Px = p(1:2:5,:);
 Py = p(2:2:6,:);
 fig = figure;
 %axis([-2 2 -2 5])
-for i=1:100
+for i=1:50
     if ~ishandle(fig)
         break
     end
