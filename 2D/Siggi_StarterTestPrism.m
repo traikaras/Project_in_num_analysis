@@ -60,10 +60,7 @@ Up = zeros(10,1); % Could be wrong
 Upp = zeros(10,1); % Could be wrong
 %% Starting from a Stationary solution
 % U(:,1) = S_extend\rhs;
-
-% fig = figure;
-% axis([-1.25 1.25 -0.25 1.25])
-% patch()
+% 
 % p1 = p1+U(1:2,1);
 % p2 = p2+U(3:4,1);
 % p3 = p3+U(5:6,1);
