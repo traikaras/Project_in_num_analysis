@@ -14,7 +14,7 @@
 
 %------------------------------------------- call mesh-gen.
     %hfun = +1.7 ;            % uniform "target" edge-lengths
-    hfun = +1.7 ;
+    hfun = +1.2 ;
    [vert,etri, ...
     tria,tnum] = refine2(node,edge,[],[],hfun) ;
 
