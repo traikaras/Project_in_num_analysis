@@ -1,8 +1,8 @@
     node = [                % list of xy "node" coordinates
         0, 1                % outer square
         0, -1
-        2, 1
-        2, -1 
+        10, 1
+        10, -1 
         ] ;
     
     edge = [                % list of "edges" between nodes
@@ -14,7 +14,7 @@
 
 %------------------------------------------- call mesh-gen.
     %hfun = +1.7 ;            % uniform "target" edge-lengths
-    hfun = +1.2 ;
+    hfun = +0.7 ;
    [vert,etri, ...
     tria,tnum] = refine2(node,edge,[],[],hfun) ;
 
