@@ -68,6 +68,7 @@ end
 E = sparse(E/3);
 % Right Hand Side
 q = E*f;
+
 %% Global Stiffness and Mass Matrix
 % We form the diagonal and upper part separately. Summ upper and transpose
 % in the final result taking advantage of symmetry
@@ -123,6 +124,25 @@ Se = sparse([SG C_til; C_til' Zsmall]);
 % RHS
 qe = [q;u_dir];
 
+%% Stationary solution
+u = Se\qe; 
+p = zeros(2*n,2);
+p(:,1) = reshape(B',[2*n,1]);
+p(:,2) = p(:,1)+u(1:2*n,1);
+for i=1:2
+patch('faces',C(:,1:3),'vertices',reshape(p(:,2),[2,n])', ...
+        'facecolor','w', ...
+        'edgecolor',[.2,.2,.2]) ;
+    hold on; axis image off;
+    patch('faces',edge(:,1:2),'vertices',node, ...
+        'facecolor','w', ...
+        'edgecolor',[.1,.1,.1], ...
+        'linewidth',1.5) ;
+    title(['Stationary solution'])
+    pause(0.5)
+end
+
+
 %% Calculating the time evolution
 Time = 20;
 nt = 200;
@@ -134,45 +154,45 @@ U = zeros(2*n+2*length(etri),nt+1);
 Up = zeros(2*n+2*length(etri),1); %Initial velocity
 Upp = zeros(2*n+2*length(etri),1); %Initial acceleration
 
-%% Solving and plotting for each timestep
-fig = figure;
-grid on
-% x0 = 300;
-% y0 = 300;
-% width = 1500;
-% height = 600;
-% set (gcf, 'position' , [x0, y0, width, height])
-% xlim([-1,11])
-% ylim([-1.5,1.5])
-for i=1:nt
-    %% Solve
-    % Solve using the Newark method
-    [U(:,i+1),Up,Upp] = Newark1step( Me, Se, qe, U(:,i), Up ,Upp,dt);
-    % Store the new positions in a new column of matrix p
-    p(:,i+1) = U(1:2*n,i+1) + p(:,1);
-    
-%     % Stop applying the forces after some time 
-%     if i==1
-%         f =[0;0];
-%         tau_23N=[0;0];
+% %% Solving and plotting for each timestep
+% fig = figure;
+% grid on
+% % x0 = 300;
+% % y0 = 300;
+% % width = 1500;
+% % height = 600;
+% % set (gcf, 'position' , [x0, y0, width, height])
+% % xlim([-1,11])
+% % ylim([-1.5,1.5])
+% for i=1:nt
+%     %% Solve
+%     % Solve using the Newark method
+%     [U(:,i+1),Up,Upp] = Newark1step( Me, Se, qe, U(:,i), Up ,Upp,dt);
+%     % Store the new positions in a new column of matrix p
+%     p(:,i+1) = U(1:2*n,i+1) + p(:,1);
+%     
+% %     % Stop applying the forces after some time 
+% %     if i==1
+% %         f =[0;0];
+% %         tau_23N=[0;0];
+% %     end
+% %     % Recalculate the right hand side, for time dependancy
+% %     rhs = vertcat(D_til*T + E*f,u_dir);
+%     %% Plot
+%     if ~ishandle(fig)
+%         break
 %     end
-%     % Recalculate the right hand side, for time dependancy
-%     rhs = vertcat(D_til*T + E*f,u_dir);
-    %% Plot
-    if ~ishandle(fig)
-        break
-    end
-    patch('faces',C(:,1:3),'vertices',reshape(p(:,i),[2,n])', ...
-        'facecolor','w', ...
-        'edgecolor',[.2,.2,.2]) ;
-    hold on; axis image off;
-    patch('faces',edge(:,1:2),'vertices',node, ...
-        'facecolor','w', ...
-        'edgecolor',[.1,.1,.1], ...
-        'linewidth',1.5) ;
-    title(['i=' num2str(i)])
-    pause(0.2)
-    %clf;
-    
-end
-    
+%     patch('faces',C(:,1:3),'vertices',reshape(p(:,i),[2,n])', ...
+%         'facecolor','w', ...
+%         'edgecolor',[.2,.2,.2]) ;
+%     hold on; axis image off;
+%     patch('faces',edge(:,1:2),'vertices',node, ...
+%         'facecolor','w', ...
+%         'edgecolor',[.1,.1,.1], ...
+%         'linewidth',1.5) ;
+%     title(['i=' num2str(i)])
+%     pause(0.2)
+%     %clf;
+%     
+% end
+%     
