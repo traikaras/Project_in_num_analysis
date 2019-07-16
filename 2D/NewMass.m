@@ -18,10 +18,10 @@ node = [                % list of xy "node" coordinates
    [B,etri,C,tnum] = refine2(node,edge,[],[],hfun) ;
    
 %% initialization 
-rho = 10;
+rho = 10000;
 % Lame constants
-lambda = 10;
-mu = 1;
+lambda = 1;
+mu = 1000;
 h = 1; % Thickness of the element
 n = length(B); % Number of nodes
 Itwo = eye(2); % 2x2 Identity
@@ -65,13 +65,13 @@ D_til = sparse(0.5*D_til);
 T = zeros(length(D_til(1,:)),1);
 %T(42) = -1;
 % Initial external force (gravity)
-f = 0*ones(2*ntria,1);
+f = -0.1*ones(2*ntria,1);
 %f(2:2:end) = -0.1;
 
 % Apply a tau on the top right corner (comment later)
 ind_corner = find(neu_bound==find(B(:,1)== L & B(:,2)==1));
 bla = neu_bound([3 4],:);
-T(2*ind_corner(B(bla(:,2),2)==1))=-0.2;
+T(2*ind_corner(B(bla(:,2),2)==1))=-2000;
 %% RHS
 % E matrix: Matrix multiplied by f. Defines all the triangles
 E = zeros(2*n,2*ntria);
@@ -96,7 +96,7 @@ for alpha=1:ntria
     % Calculate the local Mass and stiff matrix for each triangle
     palpha = B(C(alpha,:),:)';
     palpha = vertcat(palpha,ones(1,3));
-    [m,s] = localMassStiff(palpha,rho);
+    [m,s] = localMassStiff(palpha,rho,lambda,mu,h);
     
     %MASS
     % Positions in Global matrix of local values
@@ -140,8 +140,8 @@ Se = sparse([SG C_til; C_til' Zsmall]);
 qe = [q;u_dir];
 
 %% Calculating the time evolution
-Time = 20;
-nt = 200;
+Time = 5;
+nt = 50;
 dt = Time/nt;
 p = zeros(2*n,nt+1); % Set of all points
 p(:,1) = reshape(B',[2*n,1]); % Add the initial positions to the matrix
@@ -187,7 +187,7 @@ for i=1:nt
         'edgecolor',[.1,.1,.1], ...
         'linewidth',1.5) ;
     title(['i=' num2str(i)])
-    pause(0.2)
+    pause(dt)
     %clf;
     
 end

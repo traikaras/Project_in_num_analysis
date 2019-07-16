@@ -1,9 +1,5 @@
-function [m,s] = localMassStiff(P,rho)
-    h=1;
-    lambda = 1;
-    mu = 1;
+function [m,s] = localMassStiff(P,rho,lambda,mu,h)
     Itwo = eye(2);
-    ztwo = zeros(2);
     % Mass matrix
     volB = h*abs(det(P))*0.5;
     m = ones(6)+eye(6)*rho*volB/12;
