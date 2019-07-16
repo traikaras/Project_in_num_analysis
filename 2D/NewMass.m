@@ -1,9 +1,10 @@
 close all 
+L = 10;
 node = [                % list of xy "node" coordinates
         0, 1                % outer square
         0, -1
-        2, 1
-        2, -1 
+        L, 1
+        L, -1 
         ] ;
     
     edge = [                % list of "edges" between nodes
@@ -19,7 +20,7 @@ node = [                % list of xy "node" coordinates
 %% initialization 
 rho = 10;
 % Lame constants
-lambda = 1;
+lambda = 10;
 mu = 1;
 h = 1; % Thickness of the element
 n = length(B); % Number of nodes
@@ -65,8 +66,12 @@ T = zeros(length(D_til(1,:)),1);
 %T(42) = -1;
 % Initial external force (gravity)
 f = 0*ones(2*ntria,1);
-f(2:2:end) = -0.1;
+%f(2:2:end) = -0.1;
 
+% Apply a tau on the top right corner (comment later)
+ind_corner = find(neu_bound==find(B(:,1)== L & B(:,2)==1));
+bla = neu_bound([3 4],:);
+T(2*ind_corner(B(bla(:,2),2)==1))=-0.2;
 %% RHS
 % E matrix: Matrix multiplied by f. Defines all the triangles
 E = zeros(2*n,2*ntria);
