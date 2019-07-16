@@ -1,5 +1,5 @@
 close all 
-L = 4;
+L = 10;
 node = [                % list of xy "node" coordinates
         0, 1                % outer square
         0, -1
@@ -14,7 +14,7 @@ node = [                % list of xy "node" coordinates
         2, 1 
         ] ;
 %------------------------------------------- call mesh-gen.
-   hfun = +0.7 ;            % uniform "target" edge-lengths
+   hfun = +0.1 ;            % uniform "target" edge-lengths
    [B,etri,C,tnum] = refine2(node,edge,[],[],hfun) ;
    
 %% initialization 
@@ -40,7 +40,8 @@ count_boundary = length(Moving_nodes)+length(Nonmoving_nodes); % Amount of Diric
 u_dir = zeros(2*length(etri),1);
 doub = ismember(etri(:,:),Moving_bound);
 Moving_row = find(doub(:,1).*doub(:,2));
-u_dir(2*Moving_row-1) = 0.2;
+u_dir(2*Moving_row-1) = 0.05;
+%u_dir(7) = 0.2;
 count_dir = length(etri);
 %C_tilde matrix (C matrix on script)
 C_til = zeros(2*n,2*length(etri)); %C from the final system (not FEM C)
@@ -125,19 +126,16 @@ Se = sparse([SG C_til; C_til' Zsmall]);
 qe = [q;u_dir];
 
 %% Stationary solution
-u = Se\qe; 
+y = Se\qe; 
+
 p = zeros(2*n,2);
 p(:,1) = reshape(B',[2*n,1]);
-p(:,2) = p(:,1)+u(1:2*n,1);
+p(:,2) = p(:,1)+y(1:2*n,1);
 for i=1:2
-patch('faces',C(:,1:3),'vertices',reshape(p(:,2),[2,n])', ...
+patch('faces',C(:,1:3),'vertices',reshape(p(:,i),[2,n])', ...
         'facecolor','w', ...
         'edgecolor',[.2,.2,.2]) ;
     hold on; axis image off;
-    patch('faces',edge(:,1:2),'vertices',node, ...
-        'facecolor','w', ...
-        'edgecolor',[.1,.1,.1], ...
-        'linewidth',1.5) ;
     title(['Stationary solution'])
     pause(0.5)
 end
