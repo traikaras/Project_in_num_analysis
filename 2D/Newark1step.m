@@ -7,11 +7,11 @@ function [W,Wp,Wpp] = Newark1step( M, S, f, w, wp ,wpp,dt)
 %   external force. All the dynamics of the system is given in matrices M
 %   and S. We assume that the system has no dissipative terms (D=0) and
 %   that matrices M,S and f are time independent.
-%   w0 is a vector of positions of each node of the beam at time 0 as a
+%   w0 is a vector of displacements of each node of the beam at time 0 as a
 %   column vector.
-%   wp0 is a vector of first derivative of positions of each node of the
+%   wp0 is a vector of first derivative of displacements of each node of the
 %   beam at time 0 as a column vector
-%   wpp0 is a vector of second derivative of positions of each node of the
+%   wpp0 is a vector of second derivative of displacements of each node of the
 %   beam at time 0 as a column vector
 
 % Parameters for the weighted mean of the derivatives needed for the method

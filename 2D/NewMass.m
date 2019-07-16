@@ -1,4 +1,4 @@
-   
+close all 
 node = [                % list of xy "node" coordinates
         0, 1                % outer square
         0, -1
@@ -59,19 +59,21 @@ for i=1:count_neu
     D_til(2*neu_bound(i,2)-1:2*neu_bound(i,2),2*i-1:2*i) = Itwo;
 end
 D_til = 0.5*D_til;
-%% Tau
+%% Forces (Tau and gravity)
 % Initial Neumann BC
 T = zeros(length(D_til(1,:)),1);
+%T(40:50) = -1;
 % Initial external force (gravity)
-f = zeros(2*ntria,1);
+f = -0*ones(2*ntria,1);
+
 %% RHS
 % E matrix: Matrix multiplied by f. Defines all the triangles
 E = zeros(2*n,2*ntria);
 % Fill in the matrix with Itwo on specific sites
 for i=1:ntria
-    E(2*C(i,1)-1:2*C(i,1),2*i-1:2*i) = Itwo;
-    E(2*C(i,2)-1:2*C(i,2),2*i-1:2*i) = Itwo;
-    E(2*C(i,3)-1:2*C(i,3),2*i-1:2*i) = Itwo;
+    E(2*C(i,1)-1:2*C(i,1) , 2*i-1:2*i) = Itwo;
+    E(2*C(i,2)-1:2*C(i,2) , 2*i-1:2*i) = Itwo;
+    E(2*C(i,3)-1:2*C(i,3) , 2*i-1:2*i) = Itwo;
 end
 E = E/3;
 % Right Hand Side
@@ -131,4 +133,48 @@ Se = [SG C_til; C_til' Zsmall];
 % RHS
 qe = [q;u_dir];
 
+%% Calculating the time evolution
+Time = 20;
+nt = 200;
+dt = Time/nt;
+p = zeros(2*n,nt+1); % Set of all points
+p(:,1) = reshape(B',[2*n,1]); % Add the initial positions to the matrix
+% Matrix of displacements of all nodes over time
+U = zeros(2*n+2*count_dir,nt+1); 
+Up = zeros(2*n+2*count_dir,1); %Initial velocity
+Upp = zeros(2*n+2*count_dir,1); %Initial acceleration
 
+%% Solving and plotting for each timestep
+fig = figure;
+grid on
+for i=1:nt
+    %% Solve
+    % Solve using the Newark method
+    [U(:,i+1),Up,Upp] = Newark1step( Me, Se, qe, U(:,i), Up ,Upp,dt);
+    % Store the new positions in a new column of matrix p
+    p(:,i+1) = U(1:2*n,i+1) + p(:,1);
+    
+%     % Stop applying the forces after some time 
+%     if i==1
+%         f =[0;0];
+%         tau_23N=[0;0];
+%     end
+%     % Recalculate the right hand side, for time dependancy
+%     rhs = vertcat(D_til*T + E*f,u_dir);
+    %% Plot
+    if ~ishandle(fig)
+        break
+    end
+    patch('faces',C(:,1:3),'vertices',reshape(p(:,i),[2,n])', ...
+        'facecolor','w', ...
+        'edgecolor',[.2,.2,.2]) ;
+    hold on; axis image off;
+    patch('faces',edge(:,1:2),'vertices',node, ...
+        'facecolor','w', ...
+        'edgecolor',[.1,.1,.1], ...
+        'linewidth',1.5) ;
+    pause(0.2)
+    title(['i=' num2str(i)])
+
+end
+    
