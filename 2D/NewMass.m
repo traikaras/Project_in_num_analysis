@@ -2,8 +2,8 @@ close all
 node = [                % list of xy "node" coordinates
         0, 1                % outer square
         0, -1
-        10, 1
-        10, -1 
+        2, 1
+        2, -1 
         ] ;
     
     edge = [                % list of "edges" between nodes
@@ -27,10 +27,10 @@ Itwo = eye(2); % 2x2 Identity
 ntria = length(C); % Number of triangles
 %% Boundary Conditions
 % Determination of the Dirichlet edges
-dir_nodes = find(B(:,1)==0);
-ind_dir = etri(ismember(etri(:,1),dir_nodes),:);
+dir_nodes = find(B(:,1)==0); % Find nodes on the dir boundary
+ind_dir = etri(ismember(etri(:,1),dir_nodes),:); % Edges with dir nodes
 % Matrix with nodes of each vertex of the Dir BC
-dir_bound = ind_dir(ismember(ind_dir(:,2),dir_nodes),:); 
+dir_bound = ind_dir(ismember(ind_dir(:,2),dir_nodes),:); % Dir edges
 count_dir = length(dir_bound); % Amount of Dirichlet BC
 % Initial dirichlet BC (values)
 u_dir = zeros(length(dir_bound(:)),1);
@@ -42,7 +42,7 @@ for i=1:count_dir
     C_til(2*dir_bound(i,1)-1:2*dir_bound(i,1),2*i-1:2*i) = Itwo;
     C_til(2*dir_bound(i,2)-1:2*dir_bound(i,2),2*i-1:2*i) = Itwo;
 end
-C_til = 0.5*C_til; 
+C_til = sparse(0.5*C_til); 
 
 % Determination of Neumann edges
 neu_nodes = find(B(:,1)~=0 | abs(B(:,2))==1);
@@ -58,13 +58,14 @@ for i=1:count_neu
     D_til(2*neu_bound(i,1)-1:2*neu_bound(i,1),2*i-1:2*i) = Itwo;
     D_til(2*neu_bound(i,2)-1:2*neu_bound(i,2),2*i-1:2*i) = Itwo;
 end
-D_til = 0.5*D_til;
+D_til = sparse(0.5*D_til);
 %% Forces (Tau and gravity)
 % Initial Neumann BC
 T = zeros(length(D_til(1,:)),1);
-%T(40:50) = -1;
+%T(42) = -1;
 % Initial external force (gravity)
-f = -0*ones(2*ntria,1);
+f = 0*ones(2*ntria,1);
+f(2:2:end) = -0.1;
 
 %% RHS
 % E matrix: Matrix multiplied by f. Defines all the triangles
@@ -75,7 +76,7 @@ for i=1:ntria
     E(2*C(i,2)-1:2*C(i,2) , 2*i-1:2*i) = Itwo;
     E(2*C(i,3)-1:2*C(i,3) , 2*i-1:2*i) = Itwo;
 end
-E = E/3;
+E = sparse(E/3);
 % Right Hand Side
 q = D_til*T + E*f;
 %% Global Stiffness and Mass Matrix
@@ -127,9 +128,9 @@ MG = MG'+MG+MDiag;
 Zbig = zeros(size(C_til)); %Zero block of size C_til
 Zsmall = zeros(2*count_dir,2*count_dir);%Lower right corner zero block
 % MASS
-Me = [MG Zbig;Zbig' Zsmall];
+Me = sparse([MG Zbig;Zbig' Zsmall]);
 % STIFFNESS
-Se = [SG C_til; C_til' Zsmall];
+Se = sparse([SG C_til; C_til' Zsmall]);
 % RHS
 qe = [q;u_dir];
 
@@ -147,6 +148,13 @@ Upp = zeros(2*n+2*count_dir,1); %Initial acceleration
 %% Solving and plotting for each timestep
 fig = figure;
 grid on
+x0 = 300;
+y0 = 300;
+width = 1500;
+height = 600;
+set (gcf, 'position' , [x0, y0, width, height])
+% xlim([-1,11])
+% ylim([-1.5,1.5])
 for i=1:nt
     %% Solve
     % Solve using the Newark method
@@ -173,8 +181,9 @@ for i=1:nt
         'facecolor','w', ...
         'edgecolor',[.1,.1,.1], ...
         'linewidth',1.5) ;
-    pause(0.2)
     title(['i=' num2str(i)])
-
+    pause(0.2)
+    %clf;
+    
 end
     

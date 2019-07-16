@@ -28,3 +28,7 @@
         'facecolor','w', ...
         'edgecolor',[.1,.1,.1], ...
         'linewidth',1.5) ;
+    temp = B(etri);
+    for i=1:length(temp)
+        text(B(i,1),B(i,2),num2str(i))
+    end
