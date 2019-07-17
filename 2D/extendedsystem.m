@@ -1,17 +1,6 @@
-function [Me,Se,qe]=extendedsystem(n,B,C,u_dir,count_dir,D_til,C_til,f,rho,lambda,mu,h)
+function [Me,Se,qe,E]=extendedsystem(n,B,C,u_dir,count_dir,D_til,C_til,f,rho,lambda,mu,h,T)
 ntria = length(C);
 Itwo = eye(2); % 2x2 Identity
-
-% RHS
-% E matrix: Matrix multiplied by f. Defines all the triangles
-E = zeros(2*n,2*ntria);
-% Fill in the matrix with Itwo on specific sites
-for i=1:ntria
-    E(2*C(i,1)-1:2*C(i,1) , 2*i-1:2*i) = Itwo;
-    E(2*C(i,2)-1:2*C(i,2) , 2*i-1:2*i) = Itwo;
-    E(2*C(i,3)-1:2*C(i,3) , 2*i-1:2*i) = Itwo;
-end
-E = sparse(E/3);
 
 % Global Stiffness and Mass Matrix
 % We form the diagonal and upper part separately. Summ upper and transpose
@@ -65,8 +54,17 @@ Zsmall = zeros(2*count_dir,2*count_dir);%Lower right corner zero block
 Me = sparse([MG Zbig;Zbig' Zsmall]);
 % STIFFNESS
 Se = sparse([SG C_til; C_til' Zsmall]);
+
 % RHS
-T = zeros(length(D_til(1,:)),1);
+% E matrix: Matrix multiplied by f. Defines all the triangles
+E = zeros(2*n,2*ntria);
+% Fill in the matrix with Itwo on specific sites
+for i=1:ntria
+    E(2*C(i,1)-1:2*C(i,1) , 2*i-1:2*i) = Itwo;
+    E(2*C(i,2)-1:2*C(i,2) , 2*i-1:2*i) = Itwo;
+    E(2*C(i,3)-1:2*C(i,3) , 2*i-1:2*i) = Itwo;
+end
+E = sparse(E/3);
 q = D_til*T + E*f;
 qe = [q;u_dir];
 end

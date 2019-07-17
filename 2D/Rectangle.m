@@ -15,5 +15,6 @@ node = [                % list of xy "node" coordinates
         ] ;
 %------------------------------------------- call mesh-gen.
                % uniform "target" edge-lengths
-   [B,etri,C,tnum] = refine2(node,edge,[],[],hfun) ;
+   % B is the coordinate matrix, C the triangle nodes, etri the edge nodes
+   [B,etri,C,~] = refine2(node,edge,[],[],hfun) ;
 end

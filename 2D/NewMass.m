@@ -1,5 +1,5 @@
 close all 
-L = 10;                                                                    % Possible input
+L = 5;                                                                    % Possible input
 node = [                % list of xy "node" coordinates
         0, 1                % outer square
         0, -1
@@ -14,18 +14,18 @@ node = [                % list of xy "node" coordinates
         2, 1 
         ] ;
 %------------------------------------------- call mesh-gen.
-   hfun = +0.3 ;            % uniform "target" edge-lengths                % Possible input
+   hfun = +1.7 ;            % uniform "target" edge-lengths                % Possible input
    [B,etri,C,tnum] = refine2(node,edge,[],[],hfun) ;
    
 %% initialization 
-rho = 1;                                                                  % Possible input
+rho = 1;                                                                   % Possible input
 % Lame constants
 lambda = 1;                                                                % Possible input
 mu = 1;                                                                    % Possible input
 h = 1; % Thickness of the element                                          % Possible input
 n = length(B); % Number of nodes
 Itwo = eye(2); % 2x2 Identity
-ntria = length(C); % Number of triangles
+ntria = length(C); % Number of triangle
 %% Boundary Conditions
 % Determination of the Dirichlet edges
 dir_nodes = find(B(:,1)==0); % Find nodes on the dir boundary
@@ -64,16 +64,15 @@ D_til = sparse(0.5*D_til);
 % Initial Neumann BC
 T = zeros(length(D_til(1,:)),1);
 % Apply a tau on a specific place
-coord = [[5:1:10]' ones(6,1)];
-%for i=1
+%coord = [[5:1:10]' ones(6,1)];
 
-coord = [5,1]; % Specific place IN THE BOUNDARY                            % Possible input
-coord2 = [10,-1];
-edge = getEdge(coord,B,neu_bound); % Indices of T to be modified
-edge2 = getEdge(coord2,B,neu_bound);
-tau = [0,-.2]; % Force aplied
-T(edge) = tau; %Replace
-T(edge2) = -100*tau;
+% coord = [5,1]; % Specific place IN THE BOUNDARY                            % Possible input
+% coord2 = [10,-1];
+% edge = getEdge(coord,B,neu_bound); % Indices of T to be modified
+% edge2 = getEdge(coord2,B,neu_bound);
+% tau = [0,-.2]; % Force aplied
+% T(edge) = tau; %Replace
+% T(edge2) = -100*tau;
 % Initial external force (gravity)
 f = -0*ones(2*ntria,1);                                                  % Possible input
 %f(2:2:end) = -0.1;
