@@ -20,7 +20,7 @@ Itwo = eye(2);
 ztwo = zeros(2);
 P = vertcat([p1 p2 p3],ones(1,3));
 Q = P^-1;
-partE = [1 0 0 0;0 0.5 0.5 0;0 0.5 0.5 0;0 0 0 0.5];
+partE = [1 0 0 0;0 0.5 0.5 0;0 0.5 0.5 0;0 0 0 1];
 E = partE*kron(Q(1:2,:),Itwo);
 volB = h*abs(det(P))*0.5;
 % % T's
@@ -31,9 +31,9 @@ volB = h*abs(det(P))*0.5;
 % T_23 = l_23*h*[ztwo;Itwo;Itwo]*0.5;
 % T_31 = l_31*h/2*[Itwo;ztwo;Itwo];
 
-V = volB/3*[Itwo;Itwo;Itwo];
+V = (volB/3)*[Itwo;Itwo;Itwo];
 %% Mass and stiffness matrix 
-M = ones(6)+eye(6)*rho*volB/12;
+M = (kron(ones(3,3),Itwo)+eye(6))*rho*volB/12;
 lambda_mu = [lambda+2*mu 0 0 lambda; 0 2*mu 0 0; 0 0 2*mu 0; lambda 0 0 lambda+2*mu];
 S = volB*E'*lambda_mu*E;
 
