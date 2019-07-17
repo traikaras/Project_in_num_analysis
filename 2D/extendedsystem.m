@@ -12,9 +12,7 @@ for i=1:ntria
     E(2*C(i,3)-1:2*C(i,3) , 2*i-1:2*i) = Itwo;
 end
 E = sparse(E/3);
-% Right Hand Side
-T = zeros(length(D_til(1,:)),1);
-q = D_til*T + E*f;
+
 % Global Stiffness and Mass Matrix
 % We form the diagonal and upper part separately. Summ upper and transpose
 % in the final result taking advantage of symmetry
@@ -68,5 +66,7 @@ Me = sparse([MG Zbig;Zbig' Zsmall]);
 % STIFFNESS
 Se = sparse([SG C_til; C_til' Zsmall]);
 % RHS
+T = zeros(length(D_til(1,:)),1);
+q = D_til*T + E*f;
 qe = [q;u_dir];
 end

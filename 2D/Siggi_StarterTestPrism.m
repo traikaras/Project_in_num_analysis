@@ -4,7 +4,7 @@ lambda = 1;
 mu = 1;
 f = [0;0];
 h = 1;
-p1 = [0;sqrt(5)];
+p1 = [0;sqrt(3)];
 p2 = [1;0];
 p3 = [-1;0];
 
@@ -13,7 +13,7 @@ p3 = [-1;0];
 % u_3D = 0.5*(p1+p3);
 u_1D = [0;0];
 u_3D = [0;0];
-tau_23N =[0;-0.1];
+tau_23N =[0;-0.05];
 
 %% Setup
 Itwo = eye(2);
@@ -47,7 +47,7 @@ S_extend = zeros(10);
 S_extend(1:6,:)=[S C];
 S_extend(7:10,1:6)=C';
 % Right hand side
-rhs = vertcat([ztwo;Itwo;Itwo]*0.5*tau_23N+V*f,u_1D,u_3D);
+rhs = vertcat([ztwo;Itwo;Itwo]*0.5*tau_23N*h*norm(p2-p3),u_1D,u_3D);
 
 %% Calculating the time evolution
 T = 20;
@@ -59,11 +59,17 @@ U = zeros(10,nt+1);
 Up = zeros(10,1); % Could be wrong 
 Upp = zeros(10,1); % Could be wrong
 %% Starting from a Stationary solution
-% U(:,1) = S_extend\rhs;
+ U(:,1) = S_extend\rhs;
 % 
-% p1 = p1+U(1:2,1);
-% p2 = p2+U(3:4,1);
-% p3 = p3+U(5:6,1);
+p1 = p1+U(1:2,1);
+p2 = p2+U(3:4,1);
+p3 = p3+U(5:6,1);
+Px = [p1(1,1);p2(1,1);p3(1,1)];
+Py = [p1(2,1);p2(2,1);p3(2,1)];
+
+
+patch(Px,Py,'r')
+grid on;
 %NOT WORKING 
 %% Solving everything
 p(:,1) = vertcat(p1,p2,p3);

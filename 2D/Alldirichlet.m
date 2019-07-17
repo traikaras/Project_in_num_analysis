@@ -1,22 +1,8 @@
 close all 
-L = 10;
-node = [                % list of xy "node" coordinates
-        0, 1                % outer square
-        0, -1
-        L, 1
-        L, -1 
-        ] ;
-    
-    edge = [                % list of "edges" between nodes
-        1, 3                % outer square 
-        3, 4
-        2, 4
-        2, 1 
-        ] ;
-%------------------------------------------- call mesh-gen.
-   hfun = +0.1 ;            % uniform "target" edge-lengths
-   [B,etri,C,tnum] = refine2(node,edge,[],[],hfun) ;
-   
+L = 2;
+hfun = 1.7;
+[B,etri,C] = Rectangle(L,hfun);
+  
 %% initialization 
 rho = 10;
 % Lame constants
@@ -40,7 +26,7 @@ count_boundary = length(Moving_nodes)+length(Nonmoving_nodes); % Amount of Diric
 u_dir = zeros(2*length(etri),1);
 doub = ismember(etri(:,:),Moving_bound);
 Moving_row = find(doub(:,1).*doub(:,2));
-u_dir(2*Moving_row-1) = 0.05;
+u_dir(2*Moving_row-1) = 0.1;
 %u_dir(7) = 0.2;
 count_dir = length(etri);
 %C_tilde matrix (C matrix on script)
@@ -55,7 +41,7 @@ C_til = sparse(0.5*C_til);
 %% Forces (Tau and gravity)
 % Initial external force (gravity)
 f = 0*ones(2*ntria,1);
-f(2:2:end-1) = -0.1;
+%f(2:2:end-1) = -0.1;
 
 %% Mass and stiffness matrix + Extended system
 D_til = 0;
@@ -68,9 +54,8 @@ pStationary = zeros(2*n,2);
 pStationary(:,1) = reshape(B',[2*n,1]);
 pStationary(:,2) = pStationary(:,1)+y(1:2*n,1);
 for i=1:2
-patch('faces',C(:,1:3),'vertices',reshape(pStationary(:,i),[2,n])', ...
-        'facecolor','w', ...
-        'edgecolor',[.2,.2,.2]) ;
+    patch('faces',C(:,1:3),'vertices',reshape(pStationary(:,i),[2,n])', ...
+        'facecolor','w','edgecolor',[.2,.2,.2]) ;
     hold on; axis image off;
     title('Stationary solution')
     pause(0.5)
