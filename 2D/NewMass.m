@@ -1,5 +1,5 @@
 close all 
-L = 10;
+L = 10;                                                                    % Possible input
 node = [                % list of xy "node" coordinates
         0, 1                % outer square
         0, -1
@@ -14,15 +14,15 @@ node = [                % list of xy "node" coordinates
         2, 1 
         ] ;
 %------------------------------------------- call mesh-gen.
-   hfun = +0.7 ;            % uniform "target" edge-lengths
+   hfun = +0.3 ;            % uniform "target" edge-lengths                % Possible input
    [B,etri,C,tnum] = refine2(node,edge,[],[],hfun) ;
    
 %% initialization 
-rho = 10000;
+rho = 1;                                                                  % Possible input
 % Lame constants
-lambda = 1;
-mu = 1000;
-h = 1; % Thickness of the element
+lambda = 1;                                                                % Possible input
+mu = 1;                                                                    % Possible input
+h = 1; % Thickness of the element                                          % Possible input
 n = length(B); % Number of nodes
 Itwo = eye(2); % 2x2 Identity
 ntria = length(C); % Number of triangles
@@ -63,15 +63,20 @@ D_til = sparse(0.5*D_til);
 %% Forces (Tau and gravity)
 % Initial Neumann BC
 T = zeros(length(D_til(1,:)),1);
-%T(42) = -1;
-% Initial external force (gravity)
-f = -0.1*ones(2*ntria,1);
-%f(2:2:end) = -0.1;
+% Apply a tau on a specific place
+coord = [[5:1:10]' ones(6,1)];
+%for i=1
 
-% Apply a tau on the top right corner (comment later)
-ind_corner = find(neu_bound==find(B(:,1)== L & B(:,2)==1));
-bla = neu_bound([3 4],:);
-T(2*ind_corner(B(bla(:,2),2)==1))=-2000;
+coord = [5,1]; % Specific place IN THE BOUNDARY                            % Possible input
+coord2 = [10,-1];
+edge = getEdge(coord,B,neu_bound); % Indices of T to be modified
+edge2 = getEdge(coord2,B,neu_bound);
+tau = [0,-.2]; % Force aplied
+T(edge) = tau; %Replace
+T(edge2) = -100*tau;
+% Initial external force (gravity)
+f = -0*ones(2*ntria,1);                                                  % Possible input
+%f(2:2:end) = -0.1;
 %% RHS
 % E matrix: Matrix multiplied by f. Defines all the triangles
 E = zeros(2*n,2*ntria);
@@ -140,13 +145,14 @@ Se = sparse([SG C_til; C_til' Zsmall]);
 qe = [q;u_dir];
 
 %% Calculating the time evolution
-Time = 5;
-nt = 50;
+Time = 20;                                                                  % Possible input
+nt = 500;                                                                   % Possible input
 dt = Time/nt;
 p = zeros(2*n,nt+1); % Set of all points
 p(:,1) = reshape(B',[2*n,1]); % Add the initial positions to the matrix
 % Matrix of displacements of all nodes over time
-U = zeros(2*n+2*count_dir,nt+1); 
+%U = zeros(size(qe),);
+U(:,1) = Se\qe; 
 Up = zeros(2*n+2*count_dir,1); %Initial velocity
 Upp = zeros(2*n+2*count_dir,1); %Initial acceleration
 
@@ -157,10 +163,24 @@ x0 = 300;
 y0 = 300;
 width = 1500;
 height = 600;
+
+
+ptch = patch('faces',C,'vertices',[p(1:2:end,1),p(2:2:end,1)], ...
+        'facecolor','interp', 'CData',U(1:2:2*n,1) ,...
+        'edgecolor',[.2,.2,.2]) ;
+    
+
+
+colorbar
+
 set (gcf, 'position' , [x0, y0, width, height])
 % xlim([-1,11])
 % ylim([-1.5,1.5])
-for i=1:nt
+for i=2:nt
+    
+    if i == 2
+        qe = qe*0;
+    end
     %% Solve
     % Solve using the Newark method
     [U(:,i+1),Up,Upp] = Newark1step( Me, Se, qe, U(:,i), Up ,Upp,dt);
@@ -178,16 +198,19 @@ for i=1:nt
     if ~ishandle(fig)
         break
     end
-    patch('faces',C(:,1:3),'vertices',reshape(p(:,i),[2,n])', ...
-        'facecolor','w', ...
-        'edgecolor',[.2,.2,.2]) ;
-    hold on; axis image off;
-    patch('faces',edge(:,1:2),'vertices',node, ...
-        'facecolor','w', ...
-        'edgecolor',[.1,.1,.1], ...
-        'linewidth',1.5) ;
-    title(['i=' num2str(i)])
-    pause(dt)
+    ptch.Vertices = [p(1:2:end,i),p(2:2:end,i)];
+    ptch.CData = U(1:2:2*n,i);
+%     patch('faces',C(:,1:3),'vertices',reshape(p(:,i),[2,n])', ...
+%         'facecolor','w', ...
+%         'edgecolor',[.2,.2,.2]) ;
+    %hold on; axis image off;
+%     patch('faces',edge(:,1:2),'vertices',node, ...
+%         'facecolor','w', ...
+%         'edgecolor',[.1,.1,.1], ...
+%         'linewidth',1.5) ;
+    %title(['i=' num2str(i)])
+    drawnow
+    pause(1/2)
     %clf;
     
 end
