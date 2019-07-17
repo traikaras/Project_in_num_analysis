@@ -21,7 +21,8 @@ ztwo = zeros(2);
 P = vertcat([p1 p2 p3],ones(1,3));
 Q = P^-1;
 partE = [1 0 0 0;0 0.5 0.5 0;0 0.5 0.5 0;0 0 0 1];
-E = partE*kron(Q(1:2,:),Itwo);
+Qn = [Q(1,1) Q(2,1) Q(3,1);Q(1,2) Q(2,2) Q(3,2)];
+E = partE*kron(Qn,Itwo);
 volB = h*abs(det(P))*0.5;
 % % T's
 % l_12 = norm(p1-p2);
@@ -61,12 +62,11 @@ Upp = zeros(10,1); % Could be wrong
 %% Starting from a Stationary solution
  U(:,1) = S_extend\rhs;
 % 
-p1 = p1+U(1:2,1);
-p2 = p2+U(3:4,1);
-p3 = p3+U(5:6,1);
+p1 = p1+U(1:2,1)
+p2 = p2+U(3:4,1)
+p3 = p3+U(5:6,1)
 Px = [p1(1,1);p2(1,1);p3(1,1)];
 Py = [p1(2,1);p2(2,1);p3(2,1)];
-
 
 patch(Px,Py,'r')
 grid on;
