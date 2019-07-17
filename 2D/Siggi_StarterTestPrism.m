@@ -2,6 +2,7 @@
 rho = 10;
 lambda = 1;
 mu = 1;
+% Initial conditions of our beam
 f = [0;0];
 h = 1;
 p1 = [0;sqrt(3)];
@@ -9,11 +10,9 @@ p2 = [1;0];
 p3 = [-1;0];
 
 %% Boundary conditions
-% u_1D = 0.5*(p1+p2);
-% u_3D = 0.5*(p1+p3);
 u_1D = [0;0];
 u_3D = [0;0];
-tau_23N =[0;-0.05];
+tau_23N =[0;-0.1];
 
 %% Setup
 Itwo = eye(2);
@@ -24,13 +23,6 @@ partE = [1 0 0 0;0 0.5 0.5 0;0 0.5 0.5 0;0 0 0 1];
 Qn = [Q(1,1) Q(2,1) Q(3,1);Q(1,2) Q(2,2) Q(3,2)];
 E = partE*kron(Qn,Itwo);
 volB = h*abs(det(P))*0.5;
-% % T's
-% l_12 = norm(p1-p2);
-% l_23 = norm(p2-p3);
-% l_31 = norm(p1-p3);
-% T_12 = l_12*h/2*[Itwo;Itwo;ztwo];
-% T_23 = l_23*h*[ztwo;Itwo;Itwo]*0.5;
-% T_31 = l_31*h/2*[Itwo;ztwo;Itwo];
 
 V = (volB/3)*[Itwo;Itwo;Itwo];
 %% Mass and stiffness matrix 
@@ -60,16 +52,16 @@ U = zeros(10,nt+1);
 Up = zeros(10,1); % Could be wrong 
 Upp = zeros(10,1); % Could be wrong
 %% Starting from a Stationary solution
- U(:,1) = S_extend\rhs;
+%  U(:,1) = S_extend\rhs;
+% % 
+% p1 = p1+U(1:2,1)
+% p2 = p2+U(3:4,1)
+% p3 = p3+U(5:6,1)
+% Px = [p1(1,1);p2(1,1);p3(1,1)];
+% Py = [p1(2,1);p2(2,1);p3(2,1)];
 % 
-p1 = p1+U(1:2,1)
-p2 = p2+U(3:4,1)
-p3 = p3+U(5:6,1)
-Px = [p1(1,1);p2(1,1);p3(1,1)];
-Py = [p1(2,1);p2(2,1);p3(2,1)];
-
-patch(Px,Py,'r')
-grid on;
+% patch(Px,Py,'r')
+% grid on;
 %NOT WORKING 
 %% Solving everything
 p(:,1) = vertcat(p1,p2,p3);
