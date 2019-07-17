@@ -35,7 +35,7 @@ V = volB/3*[Itwo;Itwo;Itwo];
 %% Mass and stiffness matrix 
 M = ones(6)+eye(6)*rho*volB/12;
 lambda_mu = [lambda+2*mu 0 0 lambda; 0 2*mu 0 0; 0 0 2*mu 0; lambda 0 0 lambda+2*mu];
-S = E'*lambda_mu*E;
+S = volB*E'*lambda_mu*E;
 
 %% Extended system
 % Mass matrix

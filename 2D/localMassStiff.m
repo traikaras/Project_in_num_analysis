@@ -8,5 +8,5 @@ function [m,s] = localMassStiff(P,rho,lambda,mu,h)
     partE = [1 0 0 0;0 0.5 0.5 0;0 0.5 0.5 0;0 0 0 0.5];
     E = partE*kron(Q(1:2,:),Itwo);
     lambda_mu = [lambda+2*mu 0 0 lambda; 0 2*mu 0 0; 0 0 2*mu 0; lambda 0 0 lambda+2*mu];
-    s = E'*lambda_mu*E;
+    s = volB*E'*lambda_mu*E;
 end
