@@ -15,7 +15,7 @@ rho = 1000; % Density
 lambda = 1000;
 mu = 100000;
 h = 1; % Thickness of the element
-L = 50; %Length of Beam
+L = 10; %Length of Beam
 % 'magic number' for the triangulation. The lower, the more triangles.
 hfun = +0.3; 
 Itwo = eye(2); % 2x2 Identity
@@ -26,7 +26,8 @@ delay = dt/20;
 begin_st_state = 0; % Boolean to determine if we start from steady state
 i_stop = nt;
 %% Triangulization
-[B,etri,C] = Rectangle(L,hfun);
+%[B,etri,C] = Rectangle(L,hfun);
+[B,etri,C]=general_shape(L,hfun);
 % Constants from triangulization
 n = length(B); % Number of nodes
 ntria = length(C); % Number of triangles
@@ -35,7 +36,7 @@ ntria = length(C); % Number of triangles
 f = zeros(2*ntria,1);
 f(2:2:end) = -0.015; % Y component of the weight
 coord = [L,1]; % Specific place
-tau = [0,-10]; % Force aplied
+tau = [0,-75]; % Force aplied
 %% Boundary Conditions (Should be a function)
 % Determination of the Dirichlet edges
 dir_nodes = find(B(:,1)==0); % Find nodes on the dir boundary

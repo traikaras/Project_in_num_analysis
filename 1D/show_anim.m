@@ -13,7 +13,7 @@ if mov
     open(writerObj);
 end
 
-for i = 1:l
+for i = 1:1
     
     if ~ishandle(fig)
         break
@@ -42,6 +42,6 @@ end
 % hold on
 % plot([0,l],[-1/3,-1/3],'r')
 % title('Static Bending Beam')
-% xlabel('$x$','Fontsize',25,'Interpreter','latex')
-% ylabel('$w$','Fontsize',25,'Interpreter','latex')
+xlabel('$x$','Fontsize',25,'Interpreter','latex')
+ylabel('$w$','Fontsize',25,'Interpreter','latex')
 % legend('Beam','-1/3','location','best')

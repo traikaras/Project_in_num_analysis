@@ -1,4 +1,6 @@
 close all
+clear
+clc
 %% Setup
 n = 2^5; % Number of nodes
 L = 1; % Length of the beam
@@ -68,5 +70,5 @@ w = W(1:2:end-2,:);
 % and the derivative values
 wp = W(2:2:end-2,:);
 %% Visualization
-show_anim(w,dt,1)
+show_anim(w,dt,0)
 

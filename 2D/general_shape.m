@@ -7,14 +7,10 @@ hfun = +hfun;
         0, -1
         L, 1
         L, -1 
-        L/5, 0.5                % inner square
-        L/5, -0.5
-        2*L/5, 0.5
-        2*L/5, -0.5 
-        3*L/5, 0.5                % inner square
-        3*L/5, -0.5
-        4*L/5, 0.5
-        4*L/5, -0.5 ] ;
+        L/4, 0.5                % inner square
+        L/4, -0.5
+        3*L/4, 0.5
+        3*L/4, -0.5 ] ;
     
     edge = [                % list of "edges" between nodes
         1, 2                % outer square 
@@ -24,11 +20,11 @@ hfun = +hfun;
         5, 7                % inner square
         7, 8
         6, 8
-        5, 6
-        9, 11                % inner square
-        11, 12
-        10, 12
-        9, 10] ;
+        5, 6];
+%         9, 11                % second inner square
+%         11, 12
+%         10, 12
+%         9, 10] ;
 %------------------------------------------- call mesh-gen.
                % uniform "target" edge-lengths
    % B is the coordinate matrix, C the triangle nodes, etri the edge nodes
