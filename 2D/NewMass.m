@@ -162,9 +162,10 @@ x0 = 300;
 y0 = 300;
 width = 1500;
 height = 600;
+P = p-circshift(p,1,2);
 
 
-ptch = patch('faces',C,'vertices',[p(1:2:end,1),p(2:2:end,1)], ...
+ptch = patch('faces',C,'vertices',[P(1:2:end,1),P(2:2:end,1)], ...
         'facecolor','interp', 'CData',U(1:2:2*n,1) ,...
         'edgecolor',[.2,.2,.2]) ;
     

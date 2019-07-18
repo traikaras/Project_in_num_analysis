@@ -7,6 +7,8 @@
 % The triangulization id donde automatically with the mesh2d package.
 
 close all 
+clear
+clc
 %% initialization 
 rho = 1000; % Density
 % Lame constants
@@ -17,11 +19,12 @@ L = 50; %Length of Beam
 % 'magic number' for the triangulation. The lower, the more triangles.
 hfun = +0.3; 
 Itwo = eye(2); % 2x2 Identity
-Time = 50; % Final time for time evolution
+Time = 100; % Final time for time evolution
 nt = 500; % Number of time steps
 dt = Time/nt; % Size of timestep
-delay = dt/10;
-begin_st_state = 1; % Boolean to determine if we start from steady state
+delay = dt/20;
+begin_st_state = 0; % Boolean to determine if we start from steady state
+i_stop = nt;
 %% Triangulization
 [B,etri,C] = Rectangle(L,hfun);
 % Constants from triangulization
@@ -32,7 +35,7 @@ ntria = length(C); % Number of triangles
 f = zeros(2*ntria,1);
 f(2:2:end) = -0.015; % Y component of the weight
 coord = [L,1]; % Specific place
-tau = [0,-1]; % Force aplied
+tau = [0,-10]; % Force aplied
 %% Boundary Conditions (Should be a function)
 % Determination of the Dirichlet edges
 dir_nodes = find(B(:,1)==0); % Find nodes on the dir boundary
@@ -87,13 +90,11 @@ Upp = zeros(2*n+2*count_dir,1); %Initial acceleration
 
 %% Starting from stationary solution
 if begin_st_state
-    u_stat = Se\qe;
-    U(:,1) = u_stat;
-    pstart = p(:,1) + u_stat(1:2*n);
+    U(:,1) = Se\qe;
+    %U(:,1) = u_stat;
+    %pstart = p(:,1) + u_stat(1:2*n);
 end
-%% Solving and plotting for each timestep
-
-
+%% Solving for each timestep
 for i=1:nt
     %% Solve
     % Solve using the Newark method
@@ -102,20 +103,24 @@ for i=1:nt
     p(:,i+1) = U(1:2*n,i+1) + p(:,1);
     
     % Stop applying the forces after some time 
-    if i==20
+    if i==i_stop
         T = zeros(length(D_til(1,:)),1);
         f = zeros(2*ntria,1);
-        f(2:2:end) = 0.05;
+        %f(2:2:end) = 0.05;
     end
     % Recalculate the right hand side, for time dependancy
     qe = vertcat(D_til*T + E*f,u_dir);
  
 end
-
+p(:,1) = p(:,1) + begin_st_state*U(1:2*n,1);
 %% Plot
-p(:,1) = pstart;
+
 fig = figure;
 grid on
+discrx = linspace(-0.5,L+0.5,n);
+xax = zeros(1,n);
+discry = zeros(50,1);
+yax = linspace(-2,2,50);
 for j=1:nt
     
     if ~ishandle(fig)
@@ -126,6 +131,10 @@ for j=1:nt
         'facecolor','w', ...
         'edgecolor',[.2,.2,.2]) ;
     hold on; axis image off;
+    plot(discrx,xax,'r--','linewidth',1.2)
+    plot(discry,yax,'r--','linewidth',1.2)
+    ylim([-8,3])
+    xlim([-1,L+1])
 %     patch('faces',edge(:,1:2),'vertices',node, ...
 %         'facecolor','w', ...
 %         'edgecolor',[.1,.1,.1], ...
