@@ -1,4 +1,4 @@
-function [] = show_anim( M ,dt)
+function [] = show_anim( M ,dt,mov)
 %SHOWANIM Is a fast way of visualizing time evolution of a vector stored in
 %a matrix where each colun is a different time
 %   M is the matrix where the column vectors are stored
@@ -6,8 +6,14 @@ function [] = show_anim( M ,dt)
 
 l = length(M(1,:));
 fig = figure;
+if mov
+    currentFolder=pwd;
+    writerObj = VideoWriter(strcat(currentFolder,'/beam_stationary.avi'));
+    set(writerObj,'FrameRate',1/dt) % Frame rate fixed at 4 as any faster and you miss the first frame
+    open(writerObj);
+end
 
-for i = l-1:l
+for i = 1:l
     
     if ~ishandle(fig)
         break
@@ -17,7 +23,21 @@ for i = l-1:l
     title(['t = ' num2str(i*dt)])
     xlim([1,length(M(:,1))+2])
     ylim([-0.75,0.75])
-    pause(dt)
+    if mov
+        writeVideo(writerObj,getframe(fig));
+        if i ==1
+            axis tight manual
+            set(gca,'NextPlot','replaceChildren')
+        end
+    
+    else
+        pause(dt)
+    end
+  
+
+end
+if mov
+    close(writerObj);
 end
 % hold on
 % plot([0,l],[-1/3,-1/3],'r')
