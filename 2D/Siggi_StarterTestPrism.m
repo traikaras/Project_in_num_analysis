@@ -12,7 +12,7 @@ p3 = [-1;0];
 %% Boundary conditions
 u_1D = [0;0];
 u_3D = [0;0];
-tau_23N =[0;-0.1];
+tau_23N =[0;-0.4];
 
 %% Setup
 Itwo = eye(2);
@@ -86,20 +86,34 @@ end
 
 
 %% Plotting up the solution
+currentFolder=pwd;
+writerObj = VideoWriter(strcat(currentFolder,'/Prism.avi'));
+set(writerObj,'FrameRate',1/dt) % Frame rate fixed at 4 as any faster and you miss the first frame
+open(writerObj);
+
 Px = p(1:2:5,:);
 Py = p(2:2:6,:);
 fig = figure;
-axis([-1.25 1.25 -0.25 3])
 grid on
+
 for i=1:200
     if ~ishandle(fig)
         break
     end
     patch(Px(:,i),Py(:,i),'r')
+    hold on
+    plot(0.5,sqrt(0.75),'+b')
+    plot(-0.5,sqrt(0.75),'+b')
     title(['i=' num2str(i)])
-    pause(0.2)
+    axis([-1.25 1.25 -0.5 3])
+    %pause(0.2)
     %clf;
+    writeVideo(writerObj,getframe(fig));
+    if i ==1
+        axis tight manual
+        set(gca,'NextPlot','replaceChildren')
+     end
 end
-
+close(writerObj);
 
 %show_anim(U(:end-4,:),50);
