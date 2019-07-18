@@ -20,7 +20,7 @@ ptch = patch('faces',C,'vertices',[P(1:2:end,1),P(2:2:end,1)], ...
 
 cb = colorbar;
 set(cb,'position',[0.92 .2 .01 .5])
-caxis([-0.03,0.03])
+caxis([-0.01,0.01])
 
 set (gcf, 'position' , [x0, y0, width, height])
 
