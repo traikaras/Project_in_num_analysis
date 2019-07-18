@@ -19,9 +19,9 @@ for i = l-1:l
     ylim([-0.75,0.75])
     pause(dt)
 end
-hold on
-plot([0,l],[-1/3,-1/3],'r')
-title('Static Bending Beam')
-xlabel('$x$','Fontsize',25,'Interpreter','latex')
-ylabel('$w$','Fontsize',25,'Interpreter','latex')
-legend('Beam','-1/3','location','best')
+% hold on
+% plot([0,l],[-1/3,-1/3],'r')
+% title('Static Bending Beam')
+% xlabel('$x$','Fontsize',25,'Interpreter','latex')
+% ylabel('$w$','Fontsize',25,'Interpreter','latex')
+% legend('Beam','-1/3','location','best')
