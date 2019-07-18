@@ -22,7 +22,6 @@ nt = 500; % Number of time steps
 dt = Time/nt; % Size of timestep
 delay = dt/10;
 begin_st_state = 1; % Boolean to determine if we start from steady state
-
 %% Triangulization
 [B,etri,C] = Rectangle(L,hfun);
 % Constants from triangulization

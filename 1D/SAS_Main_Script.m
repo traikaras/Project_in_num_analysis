@@ -1,3 +1,4 @@
+close all
 %% Setup
 n = 2^5; % Number of nodes
 L = 1; % Length of the beam
@@ -8,10 +9,9 @@ I = 1; % Area moment of Inertia
 mu = 1; % Beam density function
 
 %% Boundary & Initial Conditions
-Q_L = 0; % Shear force at pos L
+Q_L = -1; % Shear force at pos L
 M_L = 0; % Moment at pos L
 q = 0; % Load function 
-
 w_0 = 0; % Height of the neutral axis at the first position for all time
 w_0_prime = 0; % Derivative of w at the first position for all time
 
@@ -68,5 +68,4 @@ w = W(1:2:end-2,:);
 wp = W(2:2:end-2,:);
 %% Visualization
 show_anim(w,dt)
-%show_anim(wp,dt)
 

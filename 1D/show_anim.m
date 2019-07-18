@@ -7,7 +7,7 @@ function [] = show_anim( M ,dt)
 l = length(M(1,:));
 fig = figure;
 
-for i = 1:l
+for i = l-1:l
     
     if ~ishandle(fig)
         break
@@ -16,7 +16,12 @@ for i = 1:l
     plot(M(:,i),'linewidth',5)
     title(['t = ' num2str(i*dt)])
     xlim([1,length(M(:,1))+2])
-    ylim([-1.5,1.5])
+    ylim([-0.75,0.75])
     pause(dt)
 end
-
+hold on
+plot([0,l],[-1/3,-1/3],'r')
+title('Static Bending Beam')
+xlabel('$x$','Fontsize',25,'Interpreter','latex')
+ylabel('$w$','Fontsize',25,'Interpreter','latex')
+legend('Beam','-1/3','location','best')
