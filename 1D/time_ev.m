@@ -1,4 +1,4 @@
-function [ W, dt ] = time_ev( M, S, f, w0, wp0 ,wpp0, T, nt )
+function [ W, dt ] = time_ev( M, S, f, w0, wp0 ,wpp0, T, nt,t_stop )
 %TIME_EV takes the system of differential equations described with mass
 %matrix M, stifness matrix S and right hand side f, and evolves it from
 %time zero up to time T, with nt timesteps. 
@@ -49,8 +49,9 @@ for i=2:nt+1
 %     if i*dt<5
 %         f(end-3)=f(end-3)-i*0.05;
 %     end
-%     % At time point 5 it sets Q_L as 0
-    if i*dt==5
+
+    % At time point t_stop it sets Q_L as 0
+    if i*dt==t_stop
         f(end-3)=0;
     end
 end
