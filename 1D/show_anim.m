@@ -13,7 +13,7 @@ if mov
     open(writerObj);
 end
 
-for i = 1:1
+for i = l:l
     
     if ~ishandle(fig)
         break
